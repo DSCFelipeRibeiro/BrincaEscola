@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrincaEscola | Entrar</title>
+  <style>
+    @font-face {
+      font-family: "Nunito";
+      src: url("{{ url_for('static', filename='fonts/nunito-variable.ttf', v='nunito-20261024-v1') }}") format("truetype");
+      font-style: normal;
+      font-weight: 200 1000;
+      font-display: swap;
+    }
+    :root {
+      font-family: "Nunito", Arial, sans-serif;
+      color: #17252a;
+    }
+    * { box-sizing: border-box; }
+    html {
+      min-height: 100%;
+      background-color: #f7f2e8;
+    }
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background-color: #f7f2e8;
+      background-image:
+        linear-gradient(rgba(247,242,232,.12), rgba(247,242,232,.12)),
+        url("{{ url_for('static', filename='fundo-brincaescola-original.png', v='login-original-bg-20261024-v1') }}");
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+    }
+    .card {
+      width: min(100%, 410px);
+      padding: 30px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 8px 28px #0003;
+    }
+    .brand {
+      display: grid;
+      grid-template-columns: 48px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+    .brand-mark {
+      display: block;
+      width: 48px;
+      height: 48px;
+    }
+    .brand-copy { min-width: 0; }
+    h1 {
+      margin: 0;
+      color: #17252a;
+      font-family: "Nunito", Arial, sans-serif;
+      font-size: clamp(1.75rem, 7vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -.045em;
+      line-height: 1.05;
+      white-space: nowrap;
+    }
+    .brand-brinca { color: #087e9d; }
+    .brand-escola { color: #17252a; }
+    .brand-subtitle {
+      margin: 6px 0 0;
+      color: #53666b;
+      font-size: .88rem;
+      line-height: 1.3;
+    }
+    .environment-badge {
+      width: fit-content;
+      margin: 0 0 14px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .environment-badge[data-environment="prod"] { background: #e8f3f5; border-color: #b9d8de; color: #075f74; }
+    .environment-badge[data-environment="dev"] { background: #fff2d9; border-color: #eed4a0; color: #714900; }
+    label { display: block; margin: 16px 0 6px; }
+    input, button {
+      width: 100%;
+      min-height: 44px;
+      padding: 11px 12px;
+      border: 1px solid #9aa;
+      border-radius: 6px;
+      font: inherit;
+    }
+    button {
+      margin-top: 20px;
+      border: 0;
+      background: #087e9d;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #06677f; }
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid #17252a;
+      outline-offset: 3px;
+    }
+    #mensagem { min-height: 1.4em; color: #a52222; }
+    @media (max-width: 600px) {
+      body { background-position: center center; }
+    }
+    @media (max-width: 360px) {
+      .card {
+        padding: 24px 20px;
+      }
+      .brand {
+        grid-template-columns: 40px minmax(0, 1fr);
+        gap: 9px;
+      }
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+      }
+      h1 { font-size: clamp(1.55rem, 7.5vw, 1.8rem); }
+      .brand-subtitle { font-size: .82rem; }
+    }
+  </style>
+  <script src="{{ url_for('static', filename='script.js', v='form-feedback-20261027-v1') }}" defer></script>
+</head>
+<body data-app-base="{{ request.script_root }}">
+  <main class="card">
+    <p class="environment-badge" data-environment="{{ app_environment }}">
+      {% if app_environment == 'dev' %}AMBIENTE DE TESTE{% else %}PRODUÇÃO{% endif %}
+    </p>
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+        <path d="M5 30c6-3 12-3 19 1 7-4 13-4 19-1v13c-7-3-13-3-19 1-7-4-13-4-19-1V30Z" fill="#e8f3f5" stroke="#075f74" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M24 31v13" fill="none" stroke="#075f74" stroke-width="2" stroke-linecap="round"/>
+        <rect x="7" y="10" width="14" height="15" rx="3" fill="#f2c85b"/>
+        <rect x="27" y="6" width="14" height="15" rx="3" fill="#ef927b"/>
+        <rect x="17" y="21" width="15" height="10" rx="3" fill="#63b8b0"/>
+        <circle cx="14" cy="10" r="2" fill="#f2c85b"/>
+        <circle cx="34" cy="6" r="2" fill="#ef927b"/>
+      </svg>
+      <div class="brand-copy">
+        <h1 id="titulo"><span class="brand-brinca">Brinca</span><span class="brand-escola">Escola</span></h1>
+        <p class="brand-subtitle">Acervo e empréstimos escolares</p>
+      </div>
+    </div>
+    <form id="formLogin" novalidate>
+      <label for="login">Matrícula / login</label>
+      <input id="login" name="login" autocomplete="username" aria-describedby="mensagem" required>
+      <label for="senha">Senha</label>
+      <input id="senha" name="senha" type="password" autocomplete="current-password" aria-describedby="mensagem" required>
+      <button id="btnConfirmar" type="submit">Entrar</button>
+      <p id="mensagem" role="alert" aria-live="assertive" aria-atomic="true"></p>
+    </form>
+  </main>
+</body>
+</html>

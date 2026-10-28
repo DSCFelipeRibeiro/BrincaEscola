@@ -1,0 +1,25 @@
+# Repositório público com lista de inclusão: só DEV/app, workflows e README entram.
+/*
+!/.github/
+!/.gitignore
+!/README.md
+!/CONTRIBUTING.md
+!/DEV/
+/DEV/*
+!/DEV/app/
+!/DEV/app/**
+
+# Configurações locais e credenciais nunca são versionadas.
+**/.env
+**/.env.*
+*.key
+*.pem
+
+# Artefatos locais e cópias operacionais.
+**/__pycache__/
+**/*.py[cod]
+**/.venv/
+**/venv/
+PROD/
+infra/
+Onboarding/

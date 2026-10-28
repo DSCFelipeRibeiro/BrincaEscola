@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrincaEscola | Histórico de empréstimos</title>
+  <style>
+    @font-face { font-family: "Nunito"; src: url("{{ url_for('static', filename='fonts/nunito-variable.ttf', v='nunito-20261024-v1') }}") format("truetype"); font-style: normal; font-weight: 200 1000; font-display: swap; }
+    :root { font-family: "Nunito", Arial, sans-serif; color: #17252a; }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background-color: #f7f2e8; background-image: url("{{ url_for('static', filename='fundo-brincaescola-v2.png', v='inventory-background-20261024-v3') }}"); background-position: center top; background-size: auto 180vh; background-repeat: no-repeat; background-attachment: fixed; }
+    body { min-height: 100vh; min-height: 100svh; margin: 0; padding: 26px; background: transparent; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; border-radius: 16px; background: rgba(255,255,255,.96); box-shadow: 0 8px 28px #0003; }
+    header, .toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    header { justify-content: space-between; margin-bottom: 20px; }
+    h1 { margin: 0; font-size: 2rem; line-height: 1.2; }
+    .heading-accent { color: #087e9d; }
+    .heading-dark { color: #17252a; }
+    .environment-badge { width: fit-content; margin: 0 0 12px; border: 1px solid transparent; border-radius: 999px; padding: 5px 10px; font-size: .75rem; font-weight: 800; letter-spacing: .04em; }
+    .environment-badge[data-environment="prod"] { background: #e8f3f5; border-color: #b9d8de; color: #075f74; }
+    .environment-badge[data-environment="dev"] { background: #fff2d9; border-color: #eed4a0; color: #714900; }
+    .toolbar { margin: 16px 0; }
+    input, select, button { min-height: 44px; padding: 10px 12px; border: 1px solid #9aa; border-radius: 6px; font: inherit; }
+    .toolbar input { flex: 1 1 220px; }
+    button { background: #fff; color: #075f74; border-color: #087e9d; font-weight: 600; cursor: pointer; }
+    button:hover { background: #eaf5f7; }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #17252a; outline-offset: 3px; }
+    .table-wrap { overflow-x: auto; border: 1px solid #d4dfe1; border-radius: 10px; }
+    table { width: 100%; min-width: 780px; border-collapse: collapse; text-align: left; }
+    th, td { padding: 11px 13px; border-bottom: 1px solid #e2e9ea; vertical-align: top; }
+    th { background: #f2f7f7; color: #344e55; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .status { display: inline-block; border-radius: 999px; padding: 3px 9px; background: #eaf5ed; color: #27643a; font-size: .88rem; font-weight: 700; }
+    .status[data-status="aberto"] { background: #e8f3f5; color: #075f74; }
+    .status[data-status="atrasado"], .status[data-status="perda"] { background: #fff2d9; color: #714900; }
+    .active-summary { margin: 12px 0; border: 1px solid #b9d8de; border-radius: 8px; padding: 10px 14px; background: #e8f3f5; color: #075f74; font-weight: 800; }
+    #mensagem { min-height: 1.5em; color: #53666b; }
+    @media (max-width: 600px) { body { padding: 12px; } .container { padding: 18px; } header { align-items: flex-start; } h1 { font-size: 1.7rem; } }
+  </style>
+  <script src="{{ url_for('static', filename='historico_emprestimos.js', v='loan-history-20261028-v3') }}" defer></script>
+</head>
+<body data-app-base="{{ request.script_root }}">
+  <main class="container">
+    <p class="environment-badge" data-environment="{{ app_environment }}">{% if app_environment == 'dev' %}AMBIENTE DE TESTE{% else %}PRODUÇÃO{% endif %}</p>
+    <header>
+      <h1><span class="heading-accent">Histórico</span> <span class="heading-dark">de empréstimos</span></h1>
+      <button id="btnVoltar" type="button">Voltar ao inventário</button>
+    </header>
+    <div class="toolbar">
+      <input id="pesquisa" type="search" placeholder="Pesquisar item, patrimônio ou leitor" aria-label="Pesquisar empréstimos">
+      <select id="filtroStatus" aria-label="Filtrar por situação">
+        <option value="todos">Todas as situações</option>
+        <option value="em_andamento">Em andamento</option>
+        <option value="aberto">Em aberto</option>
+        <option value="atrasado">Atrasado</option>
+        <option value="devolvido">Devolvido</option>
+        <option value="perda">Perda</option>
+      </select>
+      <button id="btnAtualizar" type="button">Atualizar histórico</button>
+      <button class="secondary" id="btnExportarCsv" type="button" disabled title="Exporta os empréstimos visíveis, respeitando a busca e o filtro atual">Exportar CSV</button>
+    </div>
+    <p id="resumoAndamento" class="active-summary" role="status" aria-live="polite">Em andamento: carregando…</p>
+    <p id="mensagem" role="status" aria-live="polite"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th scope="col">Item</th><th scope="col">Patrimônio</th><th scope="col" data-admin-only hidden>Leitor</th>
+          <th scope="col">Empréstimo</th><th scope="col">Devolução prevista</th><th scope="col">Devolução</th><th scope="col">Situação</th>
+        </tr></thead>
+        <tbody id="listaEmprestimos"></tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

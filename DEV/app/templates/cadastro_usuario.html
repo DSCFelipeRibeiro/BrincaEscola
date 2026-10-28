@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrincaEscola | Cadastrar usuário</title>
+  <style>
+    @font-face {
+      font-family: "Nunito";
+      src: url("{{ url_for('static', filename='fonts/nunito-variable.ttf', v='nunito-20261024-v1') }}") format("truetype");
+      font-style: normal;
+      font-weight: 200 1000;
+      font-display: swap;
+    }
+    :root {
+      font-family: "Nunito", Arial, sans-serif;
+      color: #17252a;
+    }
+    * { box-sizing: border-box; }
+    html {
+      min-height: 100%;
+      background-color: #f7f2e8;
+      background-image: url("{{ url_for('static', filename='fundo-brincaescola-v2.png', v='inventory-background-20261024-v3') }}");
+      background-position: center top;
+      background-size: auto 180vh;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: transparent;
+    }
+    .container {
+      width: min(100%, 460px);
+      padding: 26px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 8px 28px #0003;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 2rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .heading-accent { color: #087e9d; }
+    .heading-dark { color: #17252a; }
+    .environment-badge {
+      width: fit-content;
+      margin: 0 auto 12px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .environment-badge[data-environment="prod"] { background: #e8f3f5; border-color: #b9d8de; color: #075f74; }
+    .environment-badge[data-environment="dev"] { background: #fff2d9; border-color: #eed4a0; color: #714900; }
+    form { display: grid; gap: 12px; }
+    label { display: grid; gap: 6px; }
+    input, button {
+      min-height: 44px;
+      padding: 11px 12px;
+      border: 1px solid #9aa;
+      border-radius: 6px;
+      font: inherit;
+    }
+    button {
+      background: #fff;
+      color: #075f74;
+      border-color: #087e9d;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.primary { background: #087e9d; color: white; border-color: transparent; }
+    button.primary:hover { background: #06677f; }
+    button.secondary:hover { background: #eaf5f7; }
+    button:focus-visible, input:focus-visible {
+      outline: 3px solid #17252a;
+      outline-offset: 3px;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .buttons button { flex: 1; }
+    #mensagem { min-height: 1.4em; }
+  </style>
+  <script src="{{ url_for('static', filename='cadastrar.js', v='form-feedback-20261028-v2') }}" defer></script>
+</head>
+<body data-app-base="{{ request.script_root }}">
+  <main class="container">
+    <p class="environment-badge" data-environment="{{ app_environment }}">
+      {% if app_environment == 'dev' %}AMBIENTE DE TESTE{% else %}PRODUÇÃO{% endif %}
+    </p>
+    <h1><span class="heading-accent">Cadastrar</span> <span class="heading-dark">usuário</span></h1>
+    <form id="formUsuario" novalidate>
+      <label for="nome">Nome</label>
+      <input id="nome" name="nome" required maxlength="120" autocomplete="name" aria-describedby="mensagem">
+      <label for="matricula">Matrícula (4 caracteres; também será o login)</label>
+      <input id="matricula" name="matricula" required minlength="4" maxlength="4" pattern=".{4}" autocomplete="username" aria-describedby="mensagem">
+      <label for="password1">Senha (mínimo 8 caracteres)</label>
+      <input id="password1" type="password" required minlength="8" autocomplete="new-password" aria-describedby="mensagem">
+      <label for="password2">Confirmar senha</label>
+      <input id="password2" type="password" required minlength="8" autocomplete="new-password" aria-describedby="mensagem">
+      <p id="mensagem" role="status" aria-live="polite" aria-atomic="true"></p>
+      <label>
+        <span><input type="checkbox" id="checkboxVolante"> Professor volante</span>
+      </label>
+      <div class="buttons">
+        <button type="button" class="secondary" id="btnVoltar">Voltar</button>
+        <button type="submit" class="primary" id="btnConfirmar">Cadastrar</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>

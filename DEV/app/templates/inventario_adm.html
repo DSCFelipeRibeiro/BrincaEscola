@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BrincaEscola | Inventário</title>
+  <style>
+    @font-face {
+      font-family: "Nunito";
+      src: url("{{ url_for('static', filename='fonts/nunito-variable.ttf', v='nunito-20261024-v1') }}") format("truetype");
+      font-style: normal;
+      font-weight: 200 1000;
+      font-display: swap;
+    }
+    :root {
+      font-family: "Nunito", Arial, sans-serif;
+      color: #17252a;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html {
+      min-height: 100%;
+      background-color: #f7f2e8;
+      background-image: url("{{ url_for('static', filename='fundo-brincaescola-v2.png', v='inventory-background-20261024-v3') }}");
+      background-position: center top;
+      background-size: auto 180vh;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      padding: 26px;
+      background: transparent;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 8px 28px #0003;
+    }
+    header, .toolbar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .actions {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px 20px;
+      margin-bottom: 18px;
+    }
+    .action-group {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      align-items: center;
+      gap: 8px;
+    }
+    .action-group-label {
+      grid-column: 1 / -1;
+      margin: 0;
+      color: #53666b;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .header-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 12px; }
+    .app-menu { position: relative; }
+    .app-menu summary {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border: 1px solid #087e9d;
+      border-radius: 8px;
+      color: #075f74;
+      cursor: pointer;
+      list-style: none;
+    }
+    .app-menu summary::-webkit-details-marker { display: none; }
+    .app-menu summary:hover, .app-menu[open] summary { background: #eaf5f7; }
+    .app-menu summary:focus-visible { outline: 3px solid #17252a; outline-offset: 3px; }
+    .app-menu-panel {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 8px);
+      right: 0;
+      display: grid;
+      min-width: 230px;
+      gap: 4px;
+      padding: 8px;
+      border: 1px solid #d4dfe1;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 8px 24px #0002;
+    }
+    .app-menu-panel a { border-radius: 6px; padding: 10px 12px; color: #075f74; font-weight: 700; text-decoration: none; }
+    .app-menu-panel a:hover, .app-menu-panel a:focus-visible { background: #eaf5f7; }
+    .app-menu-panel a[aria-current="page"] { background: #e8f3f5; color: #17252a; }
+    .app-menu-panel a:focus-visible { outline: 3px solid #17252a; outline-offset: 1px; }
+    header {
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+    .heading-accent { color: #087e9d; }
+    .heading-dark { color: #17252a; }
+    .environment-badge {
+      width: fit-content;
+      margin: 0 0 12px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: .75rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+    .environment-badge[data-environment="prod"] { background: #e8f3f5; border-color: #b9d8de; color: #075f74; }
+    .environment-badge[data-environment="dev"] { background: #fff2d9; border-color: #eed4a0; color: #714900; }
+    .toolbar { margin: 16px 0; }
+    input, select, button {
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #9aa;
+      border-radius: 6px;
+      font: inherit;
+    }
+    .toolbar input { flex: 1 1 220px; }
+    button {
+      background: #fff;
+      color: #075f74;
+      border: 1px solid #087e9d;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button.primary {
+      background: #087e9d;
+      color: white;
+      border-color: transparent;
+    }
+    button.primary:hover { background: #06677f; }
+    button.secondary:hover { background: #eaf5f7; }
+    button.danger {
+      background: #a43a3a;
+      color: white;
+      border-color: transparent;
+    }
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+    .item-loans summary:focus-visible, .item-loans-list:focus-visible {
+      outline: 3px solid #17252a;
+      outline-offset: 3px;
+    }
+    .user { color: #53666b; }
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin: 14px 0 22px;
+    }
+    .item-card {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #d4dfe1;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 3px 10px #173b4612;
+      transition: box-shadow .18s ease, transform .18s ease;
+    }
+    .item-card:hover {
+      transform: translateY(-2px);
+      border-color: #9bbfc7;
+      box-shadow: 0 8px 20px #173b4620;
+    }
+    .item-image-wrap {
+      display: grid;
+      place-items: center;
+      aspect-ratio: 1.35 / 1;
+      padding: 10px;
+      background: linear-gradient(145deg, #f5f8f7, #eaf3f4);
+    }
+    .item-image {
+      display: block;
+      width: min(100%, 280px);
+      height: min(100%, 260px);
+      object-fit: contain;
+    }
+    .item-card-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 10px;
+      padding: 13px;
+    }
+    .item-card h2 {
+      margin: 0;
+      color: #17252a;
+      font-size: 1rem;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+    .item-card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .item-type, .item-availability, .item-loaned-count {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+    .item-type { background: #e8f3f5; color: #075f74; }
+    .item-availability { background: #eaf5ed; color: #27643a; }
+    .item-loaned-count { background: #fff2d9; color: #714900; }
+    .item-unavailable { background: #edf0f1; color: #46575c; }
+    .item-loans {
+      margin: 0;
+      border-left: 3px solid #d99a2b;
+      border-radius: 4px;
+      background: #fff8ec;
+      color: #493a1e;
+      font-size: .92rem;
+      overflow: hidden;
+    }
+    .item-loans summary {
+      padding: 9px 12px;
+      color: #714900;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .item-loans[open] summary { border-bottom: 1px solid #eeddbd; }
+    .item-loans-list {
+      display: grid;
+      gap: 6px;
+      max-height: 32vh;
+      margin: 0;
+      padding: 9px 12px 10px 28px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      list-style: none;
+    }
+    .item-loans-list:focus-visible { outline-offset: -3px; }
+    .item-loans-list strong { color: #302617; }
+    .item-loans-list li {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      overflow-wrap: anywhere;
+    }
+    .loan-overdue { color: #9c3030; font-weight: 700; }
+    .item-locations {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      color: #53666b;
+      font-size: .84rem;
+      list-style: none;
+    }
+    .item-locations li { display: flex; justify-content: space-between; gap: 10px; }
+    .item-locations strong { flex: 0 0 auto; color: #263b40; font-weight: 600; }
+    .item-card-cta {
+      width: 100%;
+      min-height: 44px;
+      margin-top: auto;
+      border: 0;
+      border-radius: 7px;
+      padding: 9px 12px;
+      background: #087e9d;
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+    }
+    .item-card-cta:hover { background: #06677f; }
+    .empty-state {
+      grid-column: 1 / -1;
+      margin: 0;
+      border: 1px dashed #a9bec2;
+      border-radius: 12px;
+      padding: 28px 18px;
+      color: #53666b;
+      text-align: center;
+    }
+    .empty-state p { margin: 0 0 14px; }
+    .credits {
+      margin-top: 14px;
+      color: #65777b;
+      font-size: .82rem;
+      text-align: right;
+    }
+    .credits a { color: #075f74; }
+    .message { min-height: 1.4em; }
+    .form-message {
+      margin: 0;
+      color: #a52222;
+      font-weight: 600;
+    }
+    .results-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .results-heading h2 { margin: 0; font-size: 1.25rem; }
+    .results-count { margin: 0; color: #53666b; font-size: .92rem; }
+    .clear-filters[hidden] { display: none; }
+    .clear-filters { flex: 0 0 auto; }
+    dialog {
+      width: min(94vw, 500px);
+      max-height: calc(100dvh - 24px);
+      border: 0;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 10px 40px #0006;
+    }
+    dialog::backdrop { background: #0008; }
+    dialog form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      min-width: 0;
+    }
+    dialog h2 { margin: 0 0 8px; }
+    dialog label { display: grid; gap: 5px; min-width: 0; }
+    dialog input, dialog select { width: 100%; min-width: 0; }
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    @media (max-width: 1050px) {
+      .item-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 760px) {
+      body { padding: 12px; }
+      .container { padding: 14px; }
+      header { align-items: flex-start; flex-direction: column; }
+      .item-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .item-image-wrap { aspect-ratio: 1.3 / 1; padding: 8px; }
+      .item-card { border-radius: 10px; }
+      .item-card-body { gap: 8px; padding: 10px; }
+      .item-card h2 { font-size: .94rem; }
+      .item-card-meta { gap: 5px; }
+      .item-type, .item-availability { font-size: .75rem; padding: 4px 7px; }
+      .item-loaned-count { font-size: .75rem; padding: 4px 7px; }
+      .item-locations { gap: 4px; font-size: .76rem; }
+      .item-locations li { gap: 4px; }
+      .item-locations strong { white-space: nowrap; }
+      .item-loans { font-size: .78rem; }
+      .item-loans summary { padding: 8px; }
+      .item-loans-list { max-height: 28vh; gap: 5px; padding: 8px 8px 8px 24px; }
+      .item-card-cta { min-height: 40px; padding: 8px 6px; font-size: .82rem; }
+      .actions { display: grid; grid-template-columns: 1fr; gap: 12px; }
+      .action-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .action-group button { width: 100%; min-width: 0; }
+      .toolbar input, .toolbar select { flex: 1 1 100%; width: 100%; }
+      .clear-filters { align-self: flex-start; }
+      .results-heading { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .credits { text-align: left; }
+    }
+    @media (max-width: 360px) {
+      .item-grid { grid-template-columns: minmax(0, 1fr); }
+      .item-image-wrap { aspect-ratio: 1.5 / 1; }
+      .item-card-body { gap: 10px; padding: 12px; }
+      .item-card h2 { font-size: 1rem; }
+      .item-type, .item-availability, .item-loaned-count { font-size: .82rem; }
+      .item-locations { font-size: .84rem; }
+      .item-loans { font-size: .86rem; }
+      .item-card-cta { font-size: .9rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .item-card { transition: none; }
+      .item-card:hover { transform: none; }
+    }
+  </style>
+  <script src="{{ url_for('static', filename='script_register.js', v='category-icons-20261028-v36') }}" defer></script>
+</head>
+<body data-app-base="{{ request.script_root }}">
+  <main class="container" data-category-image-base="{{ url_for('static', filename='img/categorias') }}/">
+    <p class="environment-badge" data-environment="{{ app_environment }}">
+      {% if app_environment == 'dev' %}AMBIENTE DE TESTE{% else %}PRODUÇÃO{% endif %}
+    </p>
+    <header>
+      <h1 id="titulo"><span class="heading-accent">Inventário</span> <span class="heading-dark">Escolar</span></h1>
+      <div class="header-actions">
+        <details class="app-menu">
+          <summary aria-label="Abrir menu de telas" title="Menu de telas">
+            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/>
+              <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+              <circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+            </svg>
+          </summary>
+          <nav class="app-menu-panel" aria-label="Telas do aplicativo">
+            <a href="{{ url_for('inventario') }}" aria-current="page">Inventário</a>
+            <a href="{{ url_for('historico_emprestimos') }}">Histórico de empréstimos</a>
+            {% if session.get('perfil') == 'admin' %}
+            <a href="{{ url_for('usuarios') }}">Usuários cadastrados</a>
+            {% endif %}
+          </nav>
+        </details>
+        <span class="user">Olá, {{ user_name }}</span>
+        <button class="secondary" id="btnLogout" type="button">Sair</button>
+      </div>
+    </header>
+    <div class="actions">
+      <div class="action-group" data-staff-only hidden role="group" aria-label="Circulação">
+        <p class="action-group-label">Circulação</p>
+        <button class="primary" id="pegar" type="button">Registrar empréstimo</button>
+        <button class="secondary" id="devolver" type="button">Registrar devolução</button>
+      </div>
+      <div class="action-group" data-admin-only hidden role="group" aria-label="Administração">
+        <p class="action-group-label">Administração</p>
+        <button class="secondary" id="btnCadastrar" type="button">Cadastrar item</button>
+        <button class="secondary" id="btnCadUsuario" type="button">Cadastrar usuário</button>
+      </div>
+    </div>
+    <div class="toolbar">
+      <input id="pesquisa" type="search" placeholder="Pesquisar item" aria-label="Pesquisar item">
+      <select id="filtroTipo" aria-label="Filtrar por tipo"><option value="todos">Todos os tipos</option></select>
+      <button class="secondary clear-filters" id="limparFiltros" type="button" hidden>Limpar filtros</button>
+    </div>
+    <p id="mensagem" class="message" role="status" aria-live="polite"></p>
+    <div class="results-heading">
+      <h2>Acervo</h2>
+      <p id="contagemResultados" class="results-count" aria-live="polite"></p>
+    </div>
+    <section id="gradeItens" class="item-grid" aria-label="Itens do acervo"></section>
+    <footer class="credits">
+      <a href="{{ url_for('static', filename='img/categorias/creditos.html') }}" target="_blank" rel="noopener noreferrer">
+        Créditos das ilustrações
+      </a>
+    </footer>
+  </main>
+
+  <dialog id="modalCadastro">
+    <form id="formItem" novalidate>
+      <h2>Cadastrar item</h2>
+      <p id="formItemMessage" class="form-message" data-form-message role="alert" aria-live="assertive" aria-atomic="true" hidden></p>
+      <label>Nome<input id="nomeItem" aria-describedby="formItemMessage" required maxlength="150"></label>
+      <label for="tipoItem">
+        Tipo
+        <select id="tipoItem" aria-describedby="formItemMessage" required>
+          <option value="">Selecione um tipo</option>
+        </select>
+      </label>
+      <label>Quantidade de exemplares<input id="qtdItem" type="number" min="1" max="500" aria-describedby="formItemMessage" required></label>
+      <label for="localItem">
+        Localização
+        <select id="localItem" aria-describedby="formItemMessage" required>
+          <option value="">Selecione uma localização</option>
+        </select>
+      </label>
+      <p>O patrimônio será gerado no formato categoria-item-sequencial, como MAT-ALIN-001.</p>
+      <div class="dialog-actions">
+        <button class="secondary" type="button" id="cancel">Cancelar</button>
+        <button class="primary" type="submit" id="btnSalvar">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="modalEmprestimo">
+    <form id="formEmprestimo" novalidate>
+      <h2>Registrar empréstimo</h2>
+      <p id="formEmprestimoMessage" class="form-message" data-form-message role="alert" aria-live="assertive" aria-atomic="true" hidden></p>
+      <label>Exemplar disponível<select id="exemplarId" aria-describedby="formEmprestimoMessage" required></select></label>
+      <label>Matrícula do leitor<input id="matriculaLeitor" minlength="4" maxlength="4" pattern=".{4}" aria-describedby="formEmprestimoMessage" required autocomplete="off"></label>
+      <label>Devolução prevista<input id="dataPrevista" type="date" aria-describedby="formEmprestimoMessage" required></label>
+      <div class="dialog-actions">
+        <button class="secondary" type="button" data-close="modalEmprestimo">Cancelar</button>
+        <button class="primary" type="submit">Confirmar empréstimo</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="modalDevolucao">
+    <form id="formDevolucao" novalidate>
+      <h2>Registrar devolução</h2>
+      <p id="formDevolucaoMessage" class="form-message" data-form-message role="alert" aria-live="assertive" aria-atomic="true" hidden></p>
+      <label>Empréstimo em aberto<select id="emprestimoId" aria-describedby="formDevolucaoMessage" required></select></label>
+      <div class="dialog-actions">
+        <button class="secondary" type="button" data-close="modalDevolucao">Cancelar</button>
+        <button class="primary" type="submit">Confirmar devolução</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
