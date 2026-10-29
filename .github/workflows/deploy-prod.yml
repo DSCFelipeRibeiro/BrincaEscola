@@ -16,15 +16,32 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  verify:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dispatched revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: python -m pip install -r DEV/app/requirements.txt
+      - name: Check Python syntax
+        run: python -m py_compile DEV/app/app.py DEV/app/create_admin.py
   deploy:
     if: github.ref == 'refs/heads/main'
+    needs: verify
     runs-on: ubuntu-latest
     environment: production
     steps:
       - name: Checkout approved main revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: main
+          ref: ${{ github.sha }}
       - name: Validate backup reference
         env:
           BACKUP_REFERENCE: ${{ inputs.backup_reference }}
@@ -43,7 +60,7 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.PROD_HOST }}
           DEPLOY_USER: ${{ secrets.PROD_USER }}
-          RELEASE_ID: ${{ github.sha }}
+          RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}
         run: |
           test -n "$DEPLOY_HOST"
           test -n "$DEPLOY_USER"
@@ -60,7 +77,7 @@ jobs:
         env:
           DEPLOY_HOST: ${{ secrets.PROD_HOST }}
           DEPLOY_USER: ${{ secrets.PROD_USER }}
-          RELEASE_ID: ${{ github.sha }}
+          RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}
         run: |
           ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
             "$DEPLOY_USER@$DEPLOY_HOST" \
