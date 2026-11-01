@@ -6,6 +6,23 @@ Aplicação web educacional para organizar materiais escolares e registrar empr�
 
 O BrincaEscola reúne um catálogo de materiais, cadastro de usuários, controle de empréstimos em andamento e histórico de devoluções. Foi desenvolvido como projeto didático.
 
+## Contexto acadêmico e créditos
+
+Projeto Integrador em Computação do Eixo de Computação da Universidade Virtual do Estado de São Paulo (UNIVESP), no segundo semestre de 2026 (2026/2), vinculado ao Polo Zona Oeste de São Paulo.
+
+**Facilitadora:** Nicole da Costa Cerqueira.
+
+**Integrantes:**
+
+- Daniele Hora Nogueira Santos
+- Ednéia Rodrigues de Lima Silva
+- Felipe Alex Ribeiro
+- Jose Valdir Ribeiro
+- Kélli do Prado Fernandes
+- Matheus Pinheiro de Lima Rodrigues
+- Mikael Josias Rodrigues
+- Renan Santos Andrade
+
 ## Tecnologias
 
 - Python e Flask
