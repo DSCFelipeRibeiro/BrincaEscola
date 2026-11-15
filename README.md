@@ -6,6 +6,10 @@ Aplicação web educacional para organizar materiais escolares e registrar empr�
 
 O BrincaEscola reúne um catálogo de materiais, cadastro de usuários, controle de empréstimos em andamento e histórico de devoluções. Foi desenvolvido como projeto didático.
 
+## Vídeo de apresentação
+
+[Assista à apresentação do projeto no YouTube](https://www.youtube.com/watch?v=JnTl-HjkLC4).
+
 ## Tecnologias
 
 - Python e Flask
