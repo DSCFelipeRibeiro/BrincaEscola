@@ -1,4 +1,4 @@
-# Repositório público com lista de inclusão: só DEV/app, workflows e README entram.
+# Repositório público: app, workflows, README e arquivos de schema/migração locais.
 /*
 !/.github/
 !/.gitignore
@@ -8,6 +8,11 @@
 /DEV/*
 !/DEV/app/
 !/DEV/app/**
+!/DEV/mariaDB/
+/DEV/mariaDB/*
+!/DEV/mariaDB/brincaescola_schema.sql
+!/DEV/mariaDB/001_add_volante.sql
+!/DEV/mariaDB/002_add_user_deletion_timestamp.sql
 
 # Configurações locais e credenciais nunca são versionadas.
 **/.env
