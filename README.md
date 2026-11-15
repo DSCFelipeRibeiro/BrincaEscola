@@ -6,6 +6,10 @@ Aplicação web educacional para organizar materiais escolares e registrar empr�
 
 O BrincaEscola reúne um catálogo de materiais, cadastro de usuários, controle de empréstimos em andamento e histórico de devoluções. Foi desenvolvido como projeto didático.
 
+## Vídeo de apresentação
+
+[Assista à apresentação do projeto no YouTube](https://www.youtube.com/watch?v=JnTl-HjkLC4).
+
 ## Contexto acadêmico e créditos
 
 Projeto Integrador em Computação do Eixo de Computação da Universidade Virtual do Estado de São Paulo (UNIVESP), no segundo semestre de 2026 (2026/2), vinculado ao Polo Zona Oeste de São Paulo.
@@ -22,10 +26,6 @@ Projeto Integrador em Computação do Eixo de Computação da Universidade Virtu
 - Matheus Pinheiro de Lima Rodrigues
 - Mikael Josias Rodrigues
 - Renan Santos Andrade
-
-## Vídeo de apresentação
-
-[Assista à apresentação do projeto no YouTube](https://www.youtube.com/watch?v=JnTl-HjkLC4).
 
 ## Tecnologias
 
