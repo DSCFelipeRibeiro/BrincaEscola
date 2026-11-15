@@ -17,7 +17,7 @@ Crie os ambientes `development` e `production`. Configure os segredos correspond
 
 Use uma chave de deploy restrita, conhecida e autorizada para cada ambiente. Cadastre `*_KNOWN_HOSTS` com a chave pública do host previamente verificada. Nunca coloque valores de segredos em arquivos versionados, issues ou logs. Os workflows não recebem segredos em execuções de pull request.
 
-No ambiente `development`, crie também a variável `DEV_DEPLOY_ENABLED` com o valor `true` depois de cadastrar e verificar os quatro segredos. Sem essa variável, os pushes para `dev` não iniciam deploy.
+No ambiente `development`, crie também a variável `DEV_DEPLOY_ENABLED` com o valor `true` depois de cadastrar e verificar os quatro segredos. Sem essa variável, os pushes para `dev` não iniciam deploy. O job de publicação compila a mesma revisão antes de usar SSH.
 
 ## Proteção do repositório
 
