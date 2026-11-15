@@ -23,6 +23,10 @@ Projeto Integrador em Computação do Eixo de Computação da Universidade Virtu
 - Mikael Josias Rodrigues
 - Renan Santos Andrade
 
+## Vídeo de apresentação
+
+[Assista à apresentação do projeto no YouTube](https://www.youtube.com/watch?v=JnTl-HjkLC4).
+
 ## Tecnologias
 
 - Python e Flask
